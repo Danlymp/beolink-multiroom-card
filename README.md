@@ -1,56 +1,76 @@
 # B&O Multiroom Card
 
-Home-Assistant-Dashboard-Karte für Bang-&-Olufsen-Lautsprecher: Hauptspieler, Quellen, vier Favoriten, Multiroom und gemeinsame Lautstärke. Unabhängiges Community-Projekt.
+A Home Assistant dashboard card for Bang & Olufsen speakers. Control playback, choose sources and favourites, and bring your rooms together with BeoLink Multiroom.
 
-## Installation über HACS
+## Features
 
-1. In HACS oben rechts **⋮ → Benutzerdefinierte Repositories / Custom repositories** öffnen.
-2. `https://github.com/Danlymp/beolink-multiroom-card` eintragen, Typ **Dashboard** auswählen und hinzufügen.
-3. **B&O Multiroom Card** öffnen und die neueste veröffentlichte Version herunterladen.
-4. Dashboard im Browser oder in der HA-App vollständig neu laden.
-5. Im Dashboard eine Karte **B&O Multiroom** hinzufügen. Bei einem bestehenden Dashboard gilt die folgende Umstellung.
+- Playback controls, album artwork and standby for the main speaker.
+- Source selection and four favourite buttons for presets stored on the speaker.
+- Join and leave BeoLink rooms directly from the card.
+- Individual room volume and relative group volume, with group mute and standby.
+- Built-in speaker illustrations for light and dark dashboards, plus custom images.
+- A collapsible room list, adjustable card width and an adjustable artwork area.
 
-### Wechsel von der bisherigen ZIP-Installation
+## Requirements
 
-Die bestehende Karte und ihre Konfiguration behalten. Unter **Einstellungen → Dashboards → ⋮ → Ressourcen** darf anschließend genau **ein** Eintrag dieser Karte aktiv sein:
+- Home Assistant with [HACS](https://www.hacs.dev/).
+- A Mozart main speaker configured through the official [Bang & Olufsen integration](https://www.home-assistant.io/integrations/bang_olufsen/).
+- BeoLink-compatible Mozart or ASE speakers for additional rooms. ASE volume and device controls require a suitable `media_player` entity from the Beoplay integration.
+
+Available sources and controls depend on the speaker and its Home Assistant integration. Start a BeoLink-compatible source on the main speaker before connecting other rooms.
+
+## Installation
+
+1. Open **HACS → ⋮ → Custom repositories**.
+2. Enter [https://github.com/Danlymp/beolink-multiroom-card](https://github.com/Danlymp/beolink-multiroom-card).
+3. Select **Dashboard** as the type and click **Add**.
+4. Find **B&O Multiroom Card**, open it and download the latest release.
+5. Reload your Home Assistant dashboard.
+6. Edit your dashboard, select **Add card**, and choose **B&O Multiroom**.
+
+If the card does not appear, check **Settings → Dashboards → ⋮ → Resources**. The following URL must be registered as a **JavaScript module**; add it only if it is missing:
 
 ```text
 /hacsfiles/beolink-multiroom-card/beolink-multiroom-card.js
 ```
 
-Typ: **JavaScript-Modul**. Wenn HACS diesen Eintrag bereits angelegt hat, nur den alten `/local/beolink-multiroom-card.js?...`-Ressourceneintrag entfernen. Wenn der HACS-Eintrag fehlt, den alten Eintrag auf die HACS-Adresse ändern. Einen von HACS gesetzten `hacstag`-Parameter beibehalten. Nicht beide Versionen gleichzeitig laden. Danach das Dashboard vollständig neu laden.
+If the Resources menu is hidden, enable **Advanced Mode** in your Home Assistant profile. Reload the dashboard after adding the resource.
 
-Wer seine Ressourcen in YAML verwaltet, ändert den dortigen Eintrag. Der Kartentyp bleibt `custom:beolink-multiroom-card`. Lautsprecherzuordnungen, Bilder und Anzeigeoptionen werden übernommen.
+## Configuration
 
-## Mitgelieferte Lautsprecher-Icons
+Use the card's visual editor to set up your speakers. The editor currently uses German labels.
 
-Im Karteneditor beim Hauptspieler oder einem weiteren Lautsprecher **Lautsprechermodell** auswählen. Das Icon wechselt automatisch mit dem hellen/dunklen HA-Modus. Ein separater Upload ist dafür nicht erforderlich.
+1. Select the main Mozart speaker's `media_player` entity.
+2. Use **Lautsprecher hinzufügen** to add a room. Choose the discovered speaker and its matching volume entity. A BeoLink JID can also be entered manually.
+3. Select a speaker illustration under **Lautsprechermodell**, or choose **Eigene Bilder / Standard-Icon** to use your own images.
+4. Under **Anzeige**, adjust the card size, room-list timeout, group name, and visibility of sources and favourites.
+5. Save the card.
 
-Enthalten: **Beosound 1, 2 (3. Gen.), A5, Balance, Emerge, Level und Stage sowie Beolab 8 und 18**. Für Stage gibt es zusätzlich Rahmen und Kontur. A5 ist als Linienumriss enthalten; eigene Produktfotos lassen sich weiterhin hochladen.
+To start with a minimal YAML configuration, replace the entity ID below with your main speaker's entity:
 
-**Eigene Bilder / Standard-Icon** verwendet weiterhin die vorhandenen Bildfelder. Eine Modellauswahl löscht vorhandene Uploads und Bildadressen nicht. Ein neues Icon aus einer späteren Version erscheint nach dem HACS-Update in der Auswahl.
+```yaml
+type: custom:beolink-multiroom-card
+master: media_player.your_mozart_speaker
+```
 
-## Voraussetzungen und Bedienung
+The four favourite buttons recall the presets already stored on the main speaker. Group controls appear when another room is connected; relative volume changes preserve the volume differences between rooms, within each speaker's volume limits.
 
-- Hauptspieler: Mozart-Gerät aus der offiziellen **Bang & Olufsen**-Integration.
-- Weitere Geräte: Mozart oder ASE; BeoLink-Verbindung über den Hauptspieler mit eindeutiger JID.
-- Bei ASE die passende **Beoplay-media_player-Entität** für Lautstärke und Gerätesteuerung auswählen.
-- Eine BeoLink-fähige Quelle auf dem Hauptspieler starten, bevor weitere Räume verbunden werden.
+## Speaker illustrations
 
-Die [Bedienungsanleitung](docs/BEDIENUNG.md) beschreibt Gruppenlautstärke, Standby, Favoriten, Bilder und Kartengröße. YAML-Beispiele stehen unter [examples](examples). Alle dortigen JIDs sind fiktiv und müssen durch die eigenen Werte ersetzt werden.
+Included models: **Beosound 1, Beosound 2 (3rd generation), Beosound A5, Beosound Balance, Beosound Emerge, Beosound Level, Beosound Stage, Beolab 8 and Beolab 18**.
 
-## Updates installieren
+Beosound Stage also includes frame and outline variants. Illustrations follow Home Assistant's light or dark theme. You can upload your own speaker images and select separate images for each theme.
 
-Neue veröffentlichte Versionen werden durch HACS erkannt. In HA **Einstellungen → Updates → B&O Multiroom Card → Installieren** wählen und danach das Dashboard neu laden. Für diese reine Dashboard-Karte ist normalerweise kein HA-Neustart nötig. Zum sofortigen Nachsehen in HACS beim Repository **⋮ → Informationen aktualisieren / Update information** wählen; dieser Schritt allein installiert noch kein Update.
+## Updates
 
-## Projekt pflegen und Versionen veröffentlichen
+HACS detects new releases and provides updates in Home Assistant. Open **Settings → Updates**, select **B&O Multiroom Card**, and install the update. Reload the dashboard afterwards to load the new version.
 
-[GitHub-Ersteinrichtung](docs/GITHUB_START.md) · [Neue Icons und Updates](docs/UPDATES.md) · [Änderungen](CHANGELOG.md) · [Prüfstatus](docs/TESTSTATUS.md)
+The version currently loaded is shown at the bottom of the card editor. A Home Assistant restart is normally not required for card updates.
 
-Der Workflow **Neue Version veröffentlichen** wird im GitHub-Reiter **Actions** manuell gestartet. Er setzt die Versionsnummer, baut die Kartendatei samt Icons, führt Tests aus und veröffentlicht ein Release. Dafür genügt der von GitHub bereitgestellte Repository-Token; persönliche Zugangsdaten gehören nicht in Dateien.
+## Support
 
-Die fertige Datei unter `dist` benötigt in Home Assistant keine zusätzlichen JavaScript-Bibliotheken. `src`, `icons`, `scripts` und die Testwerkzeuge werden nur zur Entwicklung und Veröffentlichung verwendet.
+See [releases](https://github.com/Danlymp/beolink-multiroom-card/releases) for available versions. Report problems through [GitHub Issues](https://github.com/Danlymp/beolink-multiroom-card/issues), including your card version, speaker models and a description of the problem.
 
-## Herkunft
+## Credits
 
-Die Lautsprecherzeichnungen basieren auf offiziellen B&O-Produktunterlagen und wurden für diese Karte aufbereitet; einzelne Symbole wurden vereinfacht oder neu gezeichnet. Siehe [Icon-Quellen](docs/ICON_SOURCES.txt) und [Hinweise](NOTICE.md).
+An independent community project, not affiliated with Bang & Olufsen. Speaker illustrations are adapted from product references; see [icon sources](https://github.com/Danlymp/beolink-multiroom-card/blob/main/docs/ICON_SOURCES.txt) and [notices](https://github.com/Danlymp/beolink-multiroom-card/blob/main/NOTICE.md).
