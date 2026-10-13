@@ -1,0 +1,16 @@
+{
+  "name": "beolink-multiroom-card",
+  "version": "0.10.0",
+  "private": true,
+  "type": "module",
+  "description": "Home Assistant dashboard card for Bang & Olufsen speakers and Beolink Multiroom.",
+  "repository": "github:Danlymp/beolink-multiroom-card",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:all": "BO_DOM_MODULE=linkedom node --test tests/*.test.mjs",
+    "prepare-release": "node scripts/prepare-release.mjs"
+  },
+  "devDependencies": { "linkedom": "0.18.12" }
+}

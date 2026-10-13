@@ -1,0 +1,25 @@
+# Beispiel für EINE Ansicht in einem Dashboard, kein vollständiges Dashboard.
+# Beide media_player-IDs ersetzen. Bestehende Bilder/Räume bei Übernahme erhalten.
+title: Musik
+path: musik
+type: sections
+max_columns: 2
+sections:
+  - type: grid
+    column_span: 2
+    cards:
+      - type: custom:beolink-multiroom-card
+        master: media_player.dein_beolab_8
+        group_name: Ganzes Haus
+        auto_close_seconds: 5
+        player_height: 560 # Mindesthöhe des geschlossenen Hauptbereichs
+        show_source: true
+        show_favorites: true
+        grid_options:
+          columns: 24
+          rows: auto # nur das Dashboard scrollen
+        # Statt 24 ist auch columns: full möglich.
+        members:
+          - name: Küche
+            jid: 3000.3000000.30000000@products.bang-olufsen.com
+            entity: media_player.deine_kueche

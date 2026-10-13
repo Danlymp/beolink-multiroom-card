@@ -1,0 +1,25 @@
+# Beispiel: Ersetze beide media_player-Entitäts-IDs durch DEINE tatsächlichen IDs.
+# Die grafische Einrichtung benötigt diese YAML-Datei nicht.
+type: custom:beolink-multiroom-card
+name: B&O Multiroom
+master: media_player.dein_beolab_8
+# Im grafischen Editor unter Anzeige getrennt umschaltbar.
+show_source: true
+show_favorites: true
+group_name: Ganzes Haus
+# Nach 5 Sekunden ohne Bedienung zuklappen; 0 schaltet den Timer aus.
+auto_close_seconds: 5
+# Mindesthöhe bei geschlossener Auswahl: 560 px; z. B. 700 für ein größeres Cover.
+player_height: 560
+grid_options:
+  columns: 12 # normale Abschnittsbreite; verändert die Hauptbereichshöhe nicht
+  rows: auto # Gesamthöhe folgt dem Inhalt; nur das Dashboard scrollen
+# Optional: alternativ zum Foto-Upload im grafischen Editor.
+# master_image: /local/lautsprecher/beolab8.png
+# master_image_dark: /local/lautsprecher/beolab8_dunkles_dashboard.png
+members:
+  - name: Küche
+    jid: 3000.3000000.30000000@products.bang-olufsen.com
+    entity: media_player.deine_kueche
+    # image: /local/lautsprecher/kueche.png
+    # image_dark: /local/lautsprecher/kueche_dunkles_dashboard.png
