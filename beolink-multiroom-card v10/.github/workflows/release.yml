@@ -1,0 +1,61 @@
+name: Publish new release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Neue Version, z. B. 0.10.0 oder 0.10.1'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: card-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Version und vorhandene Tags prüfen
+        env:
+          CARD_RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          node --input-type=module -e 'if (!/^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(process.env.CARD_RELEASE_VERSION || "")) process.exit(1)'
+          card_tag="v${CARD_RELEASE_VERSION#v}"
+          if git show-ref --verify --quiet "refs/tags/$card_tag"; then
+            echo "Diese Version existiert bereits. Bitte eine neue Versionsnummer verwenden."
+            exit 1
+          fi
+      - name: Karte einschließlich Icons bauen
+        env:
+          CARD_RELEASE_VERSION: ${{ inputs.version }}
+        run: npm run prepare-release -- "$CARD_RELEASE_VERSION"
+      - name: Testwerkzeuge installieren
+        run: npm ci --ignore-scripts
+      - name: Funktionstests
+        run: npm run test:all
+      - name: Version speichern und veröffentlichen
+        env:
+          CARD_RELEASE_VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          card_tag="v${CARD_RELEASE_VERSION#v}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json src/beolink-multiroom-card.js dist/beolink-multiroom-card.js
+          if ! git diff --cached --quiet; then
+            git commit -m "Release $card_tag"
+          fi
+          git push origin HEAD:main
+          gh release create "$card_tag" dist/beolink-multiroom-card.js --target "$(git rev-parse HEAD)" --title "B&O Multiroom $card_tag" --generate-notes --latest
